@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 북중미 월드컵 유튜브 채널 기획</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wcBlue: '#0047AB',
+                        wcRed: '#E30613',
+                        wcGold: '#FFD700',
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        darkBg: '#050505',
+                    },
+                    fontFamily: {
+                        display: ['Outfit', 'Noto Sans KR', 'sans-serif'],
+                        body: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #FFD700, #E30613);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .grid-bento {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 1.5rem;
+        }
+        @media (max-width: 1024px) {
+            .grid-bento {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            .grid-bento {
+                grid-template-columns: 1fr;
+            }
+        }
+        .tag-cloud span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header Section -->
+    <header class="max-w-7xl mx-auto mb-16 relative">
+        <div class="absolute -top-20 -left-20 w-64 h-64 bg-wcBlue opacity-20 blur-[100px] animate-pulse-slow"></div>
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-wcRed opacity-20 blur-[100px] animate-pulse-slow"></div>
+        
+        <div class="relative z-10 text-center space-y-4">
+            <span class="inline-block px-4 py-1 rounded-full border border-wcGold text-wcGold text-xs font-bold tracking-widest uppercase">YouTube Strategy 2026</span>
+            <h1 class="text-5xl md:text-7xl font-display font-extrabold tracking-tighter leading-none italic">
+                ROAD TO <span class="text-gradient">NORTH AMERICA</span>
+            </h1>
+            <p class="text-gray-400 max-w-2xl mx-auto text-lg font-light">
+                2026년 북중미 월드컵의 전설을 기록할 미디어 채널 구축 가이드
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto space-y-12">
+        
+        <!-- Section 1: Channel Identity (Bento Grid Style) -->
+        <section>
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-10 h-1 bg-wcRed"></div>
+                <h2 class="text-2xl font-display font-bold uppercase tracking-widest">01. Identity</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Branding Card -->
+                <div class="md:col-span-2 glass-card rounded-3xl p-8 flex flex-col justify-between overflow-hidden relative group">
+                    <div class="relative z-10">
+                        <h3 class="text-3xl font-bold mb-6">Channel Names</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-wcGold transition-colors">
+                                <span class="text-wcGold font-bold text-sm block mb-1">Concept A</span>
+                                <p class="text-xl font-bold italic">월드컵 실록 2026</p>
+                                <p class="text-gray-400 text-sm mt-1 italic">"역사적인 기록의 품격"</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-wcGold transition-colors">
+                                <span class="text-wcGold font-bold text-sm block mb-1">Concept B</span>
+                                <p class="text-xl font-bold italic">북중미 축구 통보</p>
+                                <p class="text-gray-400 text-sm mt-1 italic">"가장 빠른 소식의 전달"</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-wcGold transition-colors">
+                                <span class="text-wcGold font-bold text-sm block mb-1">Concept C</span>
+                                <p class="text-xl font-bold italic">2026 월드컵 정복기</p>
+                                <p class="text-gray-400 text-sm mt-1 italic">"분석과 도전의 조화"</p>
+                            </div>
+                            <div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-wcGold transition-colors">
+                                <span class="text-wcGold font-bold text-sm block mb-1">Concept D</span>
+                                <p class="text-xl font-bold italic">GOAL드컵 TV</p>
+                                <p class="text-gray-400 text-sm mt-1 italic">"직관적인 임팩트"</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -right-10 -bottom-10 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg width="200" height="200" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                    </div>
+                </div>
+
+                <!-- Intro/About Card -->
+                <div class="glass-card rounded-3xl p-8 bg-gradient-to-br from-wcBlue/20 to-transparent">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <span class="mr-2">⚽</span> About Section
+                    </h3>
+                    <div class="text-sm leading-relaxed text-gray-300 space-y-4">
+                        <p class="font-bold text-white italic">"2026 북중미 월드컵의 모든 것!"</p>
+                        <p>역대 최대 규모, 최초의 48개국 체제! 미국, 멕시코, 캐나다 3개국이 공동 개최하는 역대급 스케일의 '축구 축제'를 가장 빠르고 정확하게 전해드립니다.</p>
+                        <div class="space-y-2 pt-4 border-t border-white/10">
+                            <p class="text-xs text-wcGold font-bold tracking-widest">MAJOR CONTENT</p>
+                            <ul class="text-xs space-y-1 list-disc list-inside opacity-70">
+                                <li>48개국 확대 포맷 분석</li>
+                                <li>대한민국 태극전사 리포트</li>
+                                <li>메시·음바페 글로벌 이슈</li>
+                                <li>현지 직관 꿀팁 & 예산</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Visual Asset -->
+        <section class="relative">
+            <div class="absolute inset-0 bg-wcGold/5 blur-3xl rounded-full"></div>
+            <div class="relative flex flex-col md:flex-row items-center gap-8 glass-card rounded-[3rem] p-10 overflow-hidden border-wcGold/30">
+                <div class="w-full md:w-1/2 rounded-2xl overflow-hidden shadow-2xl shadow-black">
+                    <img src='https://opal.google/board/blobs/f0f0d529-6bb1-4599-a97f-d20baa7d38ab' alt='media_1' class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" />
+                </div>
+                <div class="w-full md:w-1/2 space-y-6">
+                    <div class="inline-block bg-wcGold text-black px-3 py-1 rounded font-bold text-xs">VISUAL ASSET #1</div>
+                    <h2 class="text-4xl font-display font-extrabold leading-tight italic">
+                        UNITED BY <br/><span class="text-wcRed">THE GAME.</span>
+                    </h2>
+                    <p class="text-gray-400 leading-relaxed">
+                        3개국이 하나되는 대담한 비주얼. <br/>
+                        채널의 썸네일과 메인 아트워크에 사용될 핵심 이미지는 <br/>
+                        역동성과 글로벌 스케일을 동시에 보여주어야 합니다.
+                    </p>
+                    <div class="flex gap-4">
+                        <div class="h-1 w-12 bg-wcBlue"></div>
+                        <div class="h-1 w-12 bg-white"></div>
+                        <div class="h-1 w-12 bg-wcRed"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Content Categories -->
+        <section>
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-10 h-1 bg-wcGold"></div>
+                <h2 class="text-2xl font-display font-bold uppercase tracking-widest text-wcGold">02. Content Strategy</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Info Item -->
+                <div class="glass-card rounded-2xl p-6 border-l-4 border-wcBlue">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-wcBlue px-2 py-1 text-[10px] font-bold rounded">정보성 분석</span>
+                        <span class="text-xs text-gray-500 italic">#RuleChanges</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">48개국 확대? 이제 32강부터 시작합니다</h4>
+                    <p class="text-sm text-gray-400 mb-4 leading-relaxed">104경기 시대 개막! 조 3위의 생존 전략과 대륙간 이동 거리 변수를 완벽 분석하여 시청자들의 궁금증을 해소합니다.</p>
+                </div>
+
+                <!-- National Team Item -->
+                <div class="glass-card rounded-2xl p-6 border-l-4 border-wcRed">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-wcRed px-2 py-1 text-[10px] font-bold rounded">국가대표 리포트</span>
+                        <span class="text-xs text-gray-500 italic">#TeamKorea</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">이강인-김민재 전성기! 대한민국 예상 라인업</h4>
+                    <p class="text-sm text-gray-400 mb-4 leading-relaxed">'포스트 손흥민' 시대를 여는 태극전사들의 최적 조합과 AI가 분석한 대한민국 본선 진출 시나리오를 제시합니다.</p>
+                </div>
+
+                <!-- Travel Item -->
+                <div class="glass-card rounded-2xl p-6 border-l-4 border-wcGold">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-wcGold text-black px-2 py-1 text-[10px] font-bold rounded">직관/꿀팁</span>
+                        <span class="text-xs text-gray-500 italic">#TravelGuide</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">현실적인 미국 월드컵 직관 예산 가이드</h4>
+                    <p class="text-sm text-gray-400 mb-4 leading-relaxed">티켓 예매, 뉴욕 메트라이프 스타디움 항공권, 3국간 이동 경비까지 '현실 직관러'들을 위한 필수 체크리스트를 공개합니다.</p>
+                </div>
+
+                <!-- Global Issue Item -->
+                <div class="glass-card rounded-2xl p-6 border-l-4 border-white">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-white text-black px-2 py-1 text-[10px] font-bold rounded">글로벌 이슈</span>
+                        <span class="text-xs text-gray-500 italic">#StarPlayers</span>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">메시의 라스트 댄스? 2026 아르헨티나의 운명</h4>
+                    <p class="text-sm text-gray-400 mb-4 leading-relaxed">음바페, 홀란드, 벨링엄 등 차세대 황제들의 대권 도전과 AI가 예측한 우승 확률 TOP 5 실시간 업데이트.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Shorts Strategy -->
+        <section class="bg-gradient-to-r from-wcBlue/10 via-transparent to-wcRed/10 p-8 rounded-[2rem] border border-white/5">
+            <h3 class="text-center font-display font-black text-2xl mb-8 italic tracking-wider">VERTICAL SHORTS MOMENTS</h3>
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="bg-black/40 border border-white/10 px-6 py-4 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+                    <span class="text-wcRed text-lg">▶</span>
+                    <span class="text-sm font-medium">개최지 16개 도시 1분 요약</span>
+                </div>
+                <div class="bg-black/40 border border-white/10 px-6 py-4 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+                    <span class="text-wcRed text-lg">▶</span>
+                    <span class="text-sm font-medium">월드컵 공인구의 비밀 칩</span>
+                </div>
+                <div class="bg-black/40 border border-white/10 px-6 py-4 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+                    <span class="text-wcRed text-lg">▶</span>
+                    <span class="text-sm font-medium">32강 토너먼트 방식 15초 정리</span>
+                </div>
+                <div class="bg-black/40 border border-white/10 px-6 py-4 rounded-full flex items-center space-x-3 hover:scale-105 transition-transform cursor-default">
+                    <span class="text-wcRed text-lg">▶</span>
+                    <span class="text-sm font-medium">손흥민 vs 메시, 2026 라스트 매치?</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: SEO Keywords Tag Cloud -->
+        <section class="pb-20">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-1 bg-white"></div>
+                <h2 class="text-2xl font-display font-bold uppercase tracking-widest">03. Tags & Keywords</h2>
+            </div>
+            <div class="glass-card rounded-3xl p-8 tag-cloud">
+                <span>2026월드컵</span> <span>북중미월드컵</span> <span>FIFA월드컵</span> <span>미국월드컵</span> <span>멕시코월드컵</span> <span>캐나다월드컵</span> 
+                <span>대한민국축구국가대표팀</span> <span>손흥민</span> <span>이강인</span> <span>김민재</span> <span>월드컵예선</span> <span>월드컵조편성</span> 
+                <span>월드컵분석</span> <span>월드컵예측</span> <span>48개국월드컵</span> <span>32강토너먼트</span> <span>메시</span> <span>음바페</span> 
+                <span>홀란드</span> <span>벨링엄</span> <span>월드컵직관</span> <span>월드컵티켓</span> <span>미국여행</span> <span>축구채널</span> 
+                <span>축구리뷰</span> <span>해외축구</span> <span>국대라인업</span> <span>축구전술</span> <span>메트라이프스타디움</span> <span>WeAre26</span> 
+                <span>WorldCup2026</span> <span>Soccer</span> <span>Football Analysis</span> <span>KFA</span> <span>월드컵하이라이트</span> 
+                <span>월드컵순위</span> <span>월드컵일정</span> <span>아시아쿼터</span> <span>조별리그</span> <span>자이언트킬링</span> <span>월드컵우승후보</span> 
+                <span>스포츠</span> <span>축구숏츠</span> <span>축구소식</span> <span>축구이슈</span> <span>포스트손흥민</span> <span>3국공동개최</span> 
+                <span>에스타디오아스테카</span> <span>월드컵비용</span> <span>월드컵공인구</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Interactive Scroll Indicator -->
+    <div class="fixed bottom-10 right-10 z-50">
+        <div class="bg-wcRed text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg animate-bounce cursor-pointer">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+        </div>
+    </div>
+
+    <script>
+        // Micro-animations for card entry
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(20px)";
+            card.style.transition = "all 0.6s ease-out";
+            observer.observe(card);
+        });
+
+        // Top button click
+        document.querySelector('.animate-bounce').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

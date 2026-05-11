@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Lab - AI 집현전</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700;800&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#050505',
+                            card: '#0f1115',
+                            accent: '#3b82f6',
+                            highlight: '#a855f7',
+                            cyan: '#22d3ee'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        scholar: ['Noto Serif KR', 'serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        .glass {
+            background: rgba(15, 17, 21, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 50%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .bento-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Decorative Elements -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden -z-10">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-accent/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-highlight/10 rounded-full blur-[120px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-6 py-12 lg:py-24">
+        
+        <!-- Hero Section -->
+        <header class="text-center mb-24 space-y-6">
+            <div class="inline-block px-4 py-1.5 mb-4 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-cyan text-sm font-semibold tracking-wider uppercase animate-bounce">
+                The Future of AI is Agentic
+            </div>
+            <h1 class="font-scholar text-2xl md:text-3xl text-brand-accent/80 mb-2">AI 집현전 : 스스로 일하는 AI의 시대</h1>
+            <h2 class="font-display text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
+                <span class="gradient-text">Agentic AI Lab</span>
+            </h2>
+            <p class="font-scholar text-xl md:text-2xl text-slate-400 italic">
+                "질문하는 시대는 끝났다, 이제 지시하고 완수하라."
+            </p>
+        </header>
+
+        <!-- Intro Section with Image -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-24 items-center">
+            <div class="lg:col-span-7 space-y-6 order-2 lg:order-1">
+                <h3 class="text-3xl font-bold font-display">채널 소개글 <span class="text-brand-accent">(Bio)</span></h3>
+                <div class="glass p-8 rounded-3xl space-y-4 text-lg text-slate-300 leading-relaxed border-l-4 border-l-brand-highlight">
+                    <p>
+                        단순히 답을 내놓는 인공지능의 시대는 저물었습니다. 이제는 스스로 계획을 세우고, 적절한 도구를 선택하며, 목표를 끝까지 완수하는 <strong class="text-white">'에이전틱 AI(Agentic AI)'</strong>의 시대입니다.
+                    </p>
+                    <p>
+                        본 채널은 챗GPT와 같은 거대언어모델(LLM)을 넘어, 실전 비즈니스와 일상을 혁명적으로 변화시킬 자율형 AI 에이전트의 모든 것을 탐구합니다.
+                    </p>
+                    <div class="pt-4 text-brand-cyan font-semibold italic">
+                        "더 이상 AI에게 묻지 마십시오. 이제 AI에게 명하고, 그 결과를 확인하십시오."
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-5 order-1 lg:order-2">
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-brand-accent to-brand-highlight rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div class="relative rounded-2xl overflow-hidden border border-white/10 aspect-video">
+                        <img src="https://opal.google/board/blobs/31a89722-e4b8-4852-b5f8-1827276363d6" alt="Agentic AI Vision" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bento Grid: Exploration Areas -->
+        <section class="mb-24">
+            <h3 class="text-3xl font-bold font-display mb-12 text-center">🔭 주요 탐구 영역</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="bento-item glass p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 text-brand-accent">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">에이전트 혁명</h4>
+                        <p class="text-slate-400 text-sm">CrewAI, LangGraph, AutoGen 등 최신 프레임워크 실전 활용법</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="bento-item glass p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6 text-brand-highlight">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">무코드 자동화</h4>
+                        <p class="text-slate-400 text-sm">코딩 한 줄 없이 구축하는 AI 뉴스 기자단 & 수익형 블로그 시스템</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bento-item glass p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-6 text-brand-cyan">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">비즈니스 통찰</h4>
+                        <p class="text-slate-400 text-sm">1인 기업을 위한 AI 직원 채용 전략 및 업무 자동화 유즈케이스</p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="bento-item glass p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-6 text-green-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">미래 기술 리뷰</h4>
+                        <p class="text-slate-400 text-sm">Devin, Project Astra 등 세상을 뒤흔들 최신 에이전트 도구 분석</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Playlist & Media -->
+        <section class="mb-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <h3 class="text-3xl font-bold font-display">플레이리스트 구성</h3>
+                <div class="space-y-4">
+                    <div class="group flex items-center p-4 glass rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+                        <span class="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-800 text-brand-accent font-bold mr-4">01</span>
+                        <div>
+                            <p class="font-bold">[강론] 에이전틱 AI의 정석</p>
+                            <p class="text-sm text-slate-500">개념 정리 및 최신 트렌드 분석</p>
+                        </div>
+                    </div>
+                    <div class="group flex items-center p-4 glass rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+                        <span class="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-800 text-brand-highlight font-bold mr-4">02</span>
+                        <div>
+                            <p class="font-bold">[실습] 10분 에이전트 구축</p>
+                            <p class="text-sm text-slate-500">CrewAI, LangGraph 등 튜토리얼</p>
+                        </div>
+                    </div>
+                    <div class="group flex items-center p-4 glass rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+                        <span class="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-800 text-brand-cyan font-bold mr-4">03</span>
+                        <div>
+                            <p class="font-bold">[비책] AI 자동화 수익화</p>
+                            <p class="text-sm text-slate-500">1인 기업 및 부업 적용 실례</p>
+                        </div>
+                    </div>
+                    <div class="group flex items-center p-4 glass rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+                        <span class="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-800 text-amber-400 font-bold mr-4">04</span>
+                        <div>
+                            <p class="font-bold">[평론] AI 도구 저울질</p>
+                            <p class="text-sm text-slate-500">하드웨어 및 신규 소프트웨어 비교 리뷰</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-cyan/20 blur-3xl rounded-full"></div>
+                <div class="rounded-3xl overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500 glow">
+                    <img src="https://opal.google/board/blobs/e524e029-5f1b-49c3-a3ee-16954e76fc49" alt="Content Strategy" class="w-full object-cover" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Clickbait & SEO Keywords -->
+        <section class="mb-24 space-y-16">
+            <div class="text-center">
+                <h3 class="text-3xl font-bold font-display mb-8">🔥 HOT TOPICS (영상 제목 안)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass p-6 rounded-2xl border-brand-accent/20 hover:border-brand-accent/60 transition-all text-left group">
+                        <span class="text-brand-accent text-xs font-bold mb-2 block uppercase tracking-widest">Clickbait #1</span>
+                        <p class="text-xl font-bold group-hover:text-brand-accent transition-colors">"챗GPT는 이제 잊으십시오. 진짜는 '에이전틱'입니다."</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border-brand-highlight/20 hover:border-brand-highlight/60 transition-all text-left group">
+                        <span class="text-brand-highlight text-xs font-bold mb-2 block uppercase tracking-widest">Clickbait #2</span>
+                        <p class="text-xl font-bold group-hover:text-brand-highlight transition-colors">"월급 안 주는 AI 직원 10명 뽑는 법 (CrewAI 실전)"</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border-brand-cyan/20 hover:border-brand-cyan/60 transition-all text-left group">
+                        <span class="text-brand-cyan text-xs font-bold mb-2 block uppercase tracking-widest">Clickbait #3</span>
+                        <p class="text-xl font-bold group-hover:text-brand-cyan transition-colors">"코딩 몰라도 가능! 클릭 몇 번으로 완성하는 AI 블로그 자동화"</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border-white/10 hover:border-white/40 transition-all text-left group">
+                        <span class="text-slate-400 text-xs font-bold mb-2 block uppercase tracking-widest">Clickbait #4</span>
+                        <p class="text-xl font-bold group-hover:text-white transition-colors">"구글과 OpenAI가 목숨 거는 다음 단계: Agentic AI 모르면 도태됩니다"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative p-12 glass rounded-[3rem] overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-accent/5 to-transparent"></div>
+                <div class="relative z-10">
+                    <h3 class="text-3xl font-bold font-display mb-8 text-center">🏷️ SEO 전략</h3>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <!-- Keywords -->
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#에이전틱AI</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#AgenticAI</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#자율형AI</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#AI에이전트</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#업무자동화</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#CrewAI</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#LangGraph</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#1인기업</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#AI수익화</span>
+                        <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-slate-300 hover:bg-brand-accent/20 hover:text-white transition-all cursor-default">#LLM</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Message -->
+        <section class="relative mb-12">
+            <div class="glass p-12 rounded-[2rem] text-center space-y-8 overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 text-brand-accent opacity-10 pointer-events-none">
+                    <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.45l8.27 14.3H3.73L12 5.45zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/></svg>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-6 relative z-10">
+                    <img src="https://opal.google/board/blobs/bb45a22e-4d33-42c7-b4cd-258b5849aad6" alt="Success Path" class="w-32 h-32 mx-auto rounded-full border-4 border-brand-accent mb-6 animate-float" />
+                    <p class="font-scholar text-xl md:text-2xl text-slate-200">
+                        여보게, 이 정보들로 그대의 채널이 유튜브라는 드넓은 바다에서 큰 배가 되어 나아가길 바라겠네. 에이전틱 AI라는 신대륙을 백성들에게 널리 알리는 훌륭한 스승이 되어보시게!
+                    </p>
+                    <div class="pt-8">
+                        <button class="px-10 py-4 bg-brand-accent hover:bg-brand-accent/80 text-white font-bold rounded-full transition-all shadow-xl shadow-brand-accent/30 hover:scale-105 active:scale-95">
+                            탐구 시작하기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Smooth entrance animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    }
+                });
+            }, observerOptions);
+
+            const animItems = document.querySelectorAll('.glass, .bento-item, header');
+            animItems.forEach(item => {
+                item.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>
