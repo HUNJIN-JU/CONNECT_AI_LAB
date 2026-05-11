@@ -1,0 +1,11 @@
+{
+  "ceo": "google/gemma-4-e2b",
+  "secretary": "text-embedding-nomic-embed-text-v1.5",
+  "youtube": "text-embedding-nomic-embed-text-v1.5",
+  "researcher": "text-embedding-nomic-embed-text-v1.5",
+  "business": "text-embedding-nomic-embed-text-v1.5",
+  "writer": "text-embedding-nomic-embed-text-v1.5",
+  "editor": "text-embedding-nomic-embed-text-v1.5",
+  "designer": "google/gemma-4-e2b",
+  "instagram": "text-embedding-nomic-embed-text-v1.5"
+}
