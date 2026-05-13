@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# version: paypal_revenue_v1
+# version: paypal_revenue_v3
 """PayPal 매출 자동 분석 — Connect AI 비즈니스 에이전트 전용.
 
 흐름:
@@ -45,8 +45,17 @@ def _base_url(mode: str) -> str:
     return "https://api-m.paypal.com" if mode.lower() == "live" else "https://api-m.sandbox.paypal.com"
 
 
-def _get_access_token(base_url: str, client_id: str, client_secret: str) -> str:
-    """OAuth2 client_credentials grant — 5분 정도 캐시 가능하지만 매번 새로 발급도 안전."""
+def _has_reporting_scope(token_response: dict) -> bool:
+    """v2: OAuth 응답의 scope 필드에 Reporting (Transaction Search) 권한 있는지 검사.
+       PayPal Dashboard 앱 설정 → Features → Transaction Search 체크 + Save 안 했으면 False.
+       사용자에게 친절한 안내 띄우는 용도."""
+    scopes = (token_response.get("scope") or "").split()
+    return any("reporting" in s for s in scopes)
+
+
+def _get_access_token_full(base_url: str, client_id: str, client_secret: str) -> dict:
+    """v2: OAuth2 client_credentials grant — token + scope 둘 다 반환.
+       scope 검사로 사용자 안내 (Transaction Search 권한 부재 사전 감지)."""
     auth = base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
     req = urllib.request.Request(
         f"{base_url}/v1/oauth2/token",
@@ -59,13 +68,17 @@ def _get_access_token(base_url: str, client_id: str, client_secret: str) -> str:
     )
     try:
         with urllib.request.urlopen(req, timeout=15) as r:
-            data = json.loads(r.read().decode())
-            return data["access_token"]
+            return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
         err_body = e.read().decode(errors="ignore")[:200]
         raise RuntimeError(f"OAuth 실패 (HTTP {e.code}): {err_body}")
     except Exception as e:
         raise RuntimeError(f"OAuth 요청 실패: {e}")
+
+
+def _get_access_token(base_url: str, client_id: str, client_secret: str) -> str:
+    """레거시 호환 — token 만 반환."""
+    return _get_access_token_full(base_url, client_id, client_secret)["access_token"]
 
 
 def _fetch_transactions(base_url: str, token: str, start: datetime, end: datetime, currency_filter: str = ""):
@@ -76,8 +89,10 @@ def _fetch_transactions(base_url: str, token: str, start: datetime, end: datetim
     while cur < end:
         page_end = min(cur + timedelta(days=31), end)
         params = {
-            "start_date": cur.isoformat().replace("+00:00", "Z"),
-            "end_date": page_end.isoformat().replace("+00:00", "Z"),
+            # v3: PayPal Transaction Search 는 마이크로초 포함 ISO 형식 거부.
+            #     초 단위까지만 + Z timezone 으로 강제. strftime 으로 안전 포맷.
+            "start_date": cur.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "end_date": page_end.strftime("%Y-%m-%dT%H:%M:%SZ"),
             "fields": "all",
             "page_size": "500",
             "page": "1",
@@ -110,6 +125,27 @@ def _fetch_transactions(base_url: str, token: str, start: datetime, end: datetim
     return all_txs
 
 
+def _parse_project_from_subject(subject: str):
+    """v2: PayPal createOrder 의 description 에서 게임/프로젝트 + 아이템 추출.
+       규약: "{Project Name} — {Item Name}"  (em-dash 또는 -- 또는 :).
+       예시:
+         "Neon Survivor — Premium Pack" → ("neon-survivor", "Premium Pack")
+         "Neon Survivor — Revive"       → ("neon-survivor", "Revive")
+         "Chick Game: Custom Skin"      → ("chick-game", "Custom Skin")
+       구분자 못 찾으면 전체를 프로젝트로 취급 + item = "(unspecified)".
+    """
+    if not subject:
+        return "(unknown)", "(unspecified)"
+    s = subject.strip()
+    for sep in [" — ", " -- ", " – ", ": "]:
+        if sep in s:
+            proj, item = s.split(sep, 1)
+            slug = proj.strip().lower().replace(" ", "-")
+            return slug or "(unknown)", item.strip() or "(unspecified)"
+    slug = s.lower().replace(" ", "-")
+    return slug or "(unknown)", "(unspecified)"
+
+
 def _summarize(txs, default_currency: str = ""):
     """거래 리스트 → 마크다운 리포트."""
     now = datetime.now(timezone.utc)
@@ -119,6 +155,8 @@ def _summarize(txs, default_currency: str = ""):
 
     by_currency = {}            # {USD: {"gross": float, "fees": float, "refunds": float, "count": int}}
     by_period = {"today": 0.0, "week": 0.0, "month": 0.0}
+    by_project = {}             # v2: {"neon-survivor": {"gross": float, "count": int, "currency": "USD",
+                                #                       "items": {"Premium Pack": {"gross": float, "count": int}}}}
     transactions_clean = []     # 정상 거래 (T0000 = 일반 결제)
     refunds = []
 
@@ -139,7 +177,8 @@ def _summarize(txs, default_currency: str = ""):
             by_currency[currency] = {"gross": 0.0, "fees": 0.0, "refunds": 0.0, "count": 0}
         c = by_currency[currency]
 
-        if event_code.startswith("T1") or "REFUND" in event_code or value < 0:
+        is_refund = event_code.startswith("T1") or "REFUND" in event_code or value < 0
+        if is_refund:
             c["refunds"] += abs(value)
             refunds.append((ts, value, currency))
         else:
@@ -153,6 +192,18 @@ def _summarize(txs, default_currency: str = ""):
                     by_period["week"] += value
                 if ts >= month_start:
                     by_period["month"] += value
+            # v2: 프로젝트별 그룹화 (정상 거래만 집계 — 환불은 별도 통계)
+            subject = info.get("transaction_subject", "") or info.get("transaction_note", "")
+            proj, item = _parse_project_from_subject(subject)
+            if proj not in by_project:
+                by_project[proj] = {"gross": 0.0, "count": 0, "currency": currency, "items": {}}
+            p = by_project[proj]
+            p["gross"] += value
+            p["count"] += 1
+            if item not in p["items"]:
+                p["items"][item] = {"gross": 0.0, "count": 0}
+            p["items"][item]["gross"] += value
+            p["items"][item]["count"] += 1
         fee = float(info.get("fee_amount", {}).get("value", "0") or 0)
         c["fees"] += abs(fee)
 
@@ -180,6 +231,31 @@ def _summarize(txs, default_currency: str = ""):
         net = d["gross"] - d["refunds"] - d["fees"]
         lines.append(f"| **{cur}** | {d['gross']:,.2f} | -{d['refunds']:,.2f} | -{d['fees']:,.2f} | **{net:,.2f}** | {d['count']}건 |")
     lines.append("")
+
+    # v2: 프로젝트(게임) 별 매출 — 카탈로그에 있는 게임들이 description 으로 자동 분류됨
+    if by_project:
+        lines.append("## 🎮 프로젝트별 매출")
+        lines.append("")
+        lines.append("| 프로젝트 | 거래 수 | 매출 | 통화 | 상위 아이템 |")
+        lines.append("|---|---|---|---|---|")
+        sorted_projects = sorted(by_project.items(), key=lambda x: -x[1]["gross"])
+        for proj, p in sorted_projects:
+            top_items = sorted(p["items"].items(), key=lambda x: -x[1]["gross"])[:2]
+            top_str = ", ".join(f"{name} ({d['count']}건)" for name, d in top_items)
+            lines.append(f"| **{proj}** | {p['count']}건 | {p['gross']:,.2f} | {p['currency']} | {top_str} |")
+        lines.append("")
+        # 상세 아이템 분해 (각 프로젝트별)
+        for proj, p in sorted_projects:
+            if len(p["items"]) <= 1:
+                continue
+            lines.append(f"### 🎯 {proj} 아이템 분해")
+            lines.append("")
+            lines.append("| 아이템 | 거래 수 | 매출 | ARPU |")
+            lines.append("|---|---|---|---|")
+            for name, d in sorted(p["items"].items(), key=lambda x: -x[1]["gross"]):
+                arpu = d["gross"] / d["count"] if d["count"] > 0 else 0
+                lines.append(f"| {name} | {d['count']}건 | {d['gross']:,.2f} | {arpu:,.2f} |")
+            lines.append("")
 
     # 기간별 (default_currency 기준)
     primary_cur = default_currency or (sorted(by_currency.items(), key=lambda x: -x[1]["gross"])[0][0] if by_currency else "USD")
@@ -240,13 +316,93 @@ def _summarize(txs, default_currency: str = ""):
     return "\n".join(lines)
 
 
+def _json_dump(txs, default_currency: str = ""):
+    """v2: OUTPUT=json 모드에서 호출. 마크다운 대신 watcher / 대시보드가 파싱하기
+       쉬운 구조화 JSON 출력. 새 결제 감지 + 대시보드 그래프 양쪽에서 사용."""
+    out = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        "currency_filter": default_currency,
+        "totals": {"by_currency": {}, "by_period": {"today": 0.0, "week": 0.0, "month": 0.0}},
+        "by_project": {},
+        "by_day": {},        # {"2026-05-12": {"USD": {"gross": float, "count": int}}}
+        "transactions": [],  # 최근 100건만
+    }
+    now = datetime.now(timezone.utc)
+    today_start = datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
+    week_start = today_start - timedelta(days=7)
+    month_start = today_start - timedelta(days=30)
+
+    for t in txs:
+        info = t.get("transaction_info", {})
+        amount = info.get("transaction_amount", {})
+        currency = amount.get("currency_code", "USD")
+        value = float(amount.get("value", "0") or 0)
+        event_code = info.get("transaction_event_code", "")
+        tx_id = info.get("transaction_id", "")
+        subject = info.get("transaction_subject", "") or info.get("transaction_note", "")
+        ts_str = info.get("transaction_initiation_date", "")
+        try:
+            ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+        except Exception:
+            ts = None
+        is_refund = event_code.startswith("T1") or "REFUND" in event_code or value < 0
+
+        # totals
+        cur_bucket = out["totals"]["by_currency"].setdefault(currency, {"gross": 0.0, "refunds": 0.0, "fees": 0.0, "count": 0})
+        if is_refund:
+            cur_bucket["refunds"] += abs(value)
+        else:
+            cur_bucket["gross"] += value
+            cur_bucket["count"] += 1
+            if ts and currency == (default_currency or currency):
+                if ts >= today_start: out["totals"]["by_period"]["today"] += value
+                if ts >= week_start: out["totals"]["by_period"]["week"] += value
+                if ts >= month_start: out["totals"]["by_period"]["month"] += value
+        cur_bucket["fees"] += abs(float(info.get("fee_amount", {}).get("value", "0") or 0))
+
+        # by_project
+        if not is_refund:
+            proj, item = _parse_project_from_subject(subject)
+            p = out["by_project"].setdefault(proj, {"gross": 0.0, "count": 0, "currency": currency, "items": {}})
+            p["gross"] += value
+            p["count"] += 1
+            it = p["items"].setdefault(item, {"gross": 0.0, "count": 0})
+            it["gross"] += value
+            it["count"] += 1
+
+        # by_day (last 30 days)
+        if ts and ts >= month_start and not is_refund:
+            day_key = ts.strftime("%Y-%m-%d")
+            d = out["by_day"].setdefault(day_key, {})
+            db = d.setdefault(currency, {"gross": 0.0, "count": 0})
+            db["gross"] += value
+            db["count"] += 1
+
+        # transactions (recent first, cap 100)
+        out["transactions"].append({
+            "id": tx_id,
+            "ts": ts.isoformat() if ts else "",
+            "ts_epoch": int(ts.timestamp()) if ts else 0,
+            "value": value,
+            "currency": currency,
+            "subject": subject,
+            "event_code": event_code,
+            "is_refund": is_refund,
+        })
+
+    out["transactions"].sort(key=lambda x: x["ts_epoch"], reverse=True)
+    out["transactions"] = out["transactions"][:100]
+    return out
+
+
 def main():
     cfg = _load()
     mode = (cfg.get("MODE") or "sandbox").strip().lower()
     client_id = (cfg.get("CLIENT_ID") or "").strip()
     client_secret = (cfg.get("CLIENT_SECRET") or "").strip()
-    lookback = int(cfg.get("LOOKBACK_DAYS", 30))
+    lookback = int(os.environ.get("LOOKBACK_DAYS", cfg.get("LOOKBACK_DAYS", 30)))
     currency = (cfg.get("CURRENCY") or "").strip().upper()
+    output_mode = (os.environ.get("OUTPUT") or "markdown").strip().lower()
 
     if not client_id or not client_secret:
         _log("CLIENT_ID 또는 CLIENT_SECRET 비어있음. PayPal Developer Dashboard 에서 발급:", "err")
@@ -258,19 +414,54 @@ def main():
     _log(f"PayPal {mode.upper()} 모드 · 최근 {lookback}일 분석", "info")
 
     try:
-        token = _get_access_token(base, client_id, client_secret)
+        token_resp = _get_access_token_full(base, client_id, client_secret)
+        token = token_resp["access_token"]
         _log("OAuth 인증 성공", "ok")
     except Exception as e:
         _log(f"OAuth 실패: {e}", "err")
         sys.exit(1)
+
+    # v2: scope 검사 → Reporting (Transaction Search) 권한 없으면 친절 안내 후 종료
+    if not _has_reporting_scope(token_resp):
+        _log("Transaction Search (Reporting) 권한이 토큰에 없음", "err")
+        _log("  PayPal Developer Dashboard → 본인 앱 → Features → ", "info")
+        _log("  ☑ Transaction search 체크 → Save Changes (반드시!)", "info")
+        _log("  변경 후 1~3분 대기 → 다시 시도", "info")
+        _log("", "info")
+        _log("  💡 자주 놓치는 곳:", "info")
+        _log("  - Default Application 사용 중이면 새 앱 만들기 (Features 잠금 가능)", "info")
+        _log("  - 좌상단 Sandbox/Live 토글이 입력한 자격증명과 같은 환경인지", "info")
+        _log("  - Live 환경은 PayPal 비즈니스 인증 + 별도 권한 신청 필요할 수 있음", "info")
+        if output_mode == "json":
+            print(json.dumps({
+                "error": "reporting_scope_missing",
+                "message": "OAuth 토큰에 Transaction Search 권한 없음",
+                "scope": token_resp.get("scope", ""),
+                "fix": "PayPal Dashboard 앱 Features 에서 Transaction search 체크 + Save"
+            }, ensure_ascii=False, indent=2))
+        else:
+            print("# 💰 PayPal 매출 분석\n")
+            print("> ❌ **Transaction Search 권한 없음** — PayPal Dashboard 에서 활성화 필요")
+            print()
+            print("**해결 단계:**")
+            print("1. https://developer.paypal.com/dashboard/applications")
+            print("2. 좌상단 Sandbox/Live 토글 확인 (현재 모드: `" + mode + "`)")
+            print("3. 본인 앱 클릭")
+            print("4. **Features** 섹션 → ☑ **Transaction search** 체크")
+            print("5. 페이지 하단 **Save Changes** 클릭 (필수!)")
+            print("6. 1~3분 대기 후 매출 대시보드 다시 새로고침")
+        sys.exit(2)
 
     end = datetime.now(timezone.utc)
     start = end - timedelta(days=lookback)
     txs = _fetch_transactions(base, token, start, end, currency)
     _log(f"총 {len(txs)}건 거래 수집", "ok")
 
-    report = _summarize(txs, currency)
-    print(report)
+    if output_mode == "json":
+        print(json.dumps(_json_dump(txs, currency), ensure_ascii=False, indent=2))
+    else:
+        report = _summarize(txs, currency)
+        print(report)
 
 
 if __name__ == "__main__":
