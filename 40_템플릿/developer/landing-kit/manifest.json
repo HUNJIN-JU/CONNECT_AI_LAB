@@ -1,0 +1,40 @@
+{
+  "name": "Landing Kit",
+  "version": "1.0.0",
+  "category": "web",
+  "description": "1인 기업·SaaS 랜딩 페이지 검증된 6-섹션 구조. Hero·Features·Pricing·FAQ·CTA·Footer.",
+  "base": "vite-react + Tailwind v4",
+  "components": [
+    "Hero.tsx",
+    "Features.tsx",
+    "Pricing.tsx",
+    "FAQ.tsx",
+    "CTA.tsx",
+    "Footer.tsx"
+  ],
+  "keywords": [
+    "landing",
+    "랜딩",
+    "메인",
+    "홈페이지",
+    "saas",
+    "리드",
+    "lead",
+    "마케팅",
+    "출시",
+    "런칭"
+  ],
+  "dependencies": {
+    "production": [
+      "lucide-react"
+    ],
+    "dev": []
+  },
+  "tested_with": {
+    "node": ">=20",
+    "react": "^19",
+    "tailwindcss": "^4"
+  },
+  "_injectedAt": "2026-05-13T00:39:31.507Z",
+  "_injectedFrom": "ezer-ai"
+}
