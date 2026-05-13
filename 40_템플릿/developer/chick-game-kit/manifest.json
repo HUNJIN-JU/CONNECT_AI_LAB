@@ -1,0 +1,40 @@
+{
+  "name": "병아리게임 샘플팩",
+  "version": "1.0.0",
+  "category": "game",
+  "description": "병아리 키우기 미니 게임 (다마고치 스타일). 단일 HTML 파일, 프레임워크 X. EZER 샘플 팩.",
+  "base": "vanilla HTML/CSS/JS",
+  "components": [
+    "index.html"
+  ],
+  "keywords": [
+    "병아리",
+    "chick",
+    "키우기",
+    "키우는",
+    "키우자",
+    "게임",
+    "game",
+    "미니게임",
+    "미니 게임",
+    "다마고치",
+    "tamagotchi",
+    "펫",
+    "pet",
+    "키우기게임"
+  ],
+  "dependencies": {
+    "production": [],
+    "dev": []
+  },
+  "tested_with": {
+    "browser": "modern (Chrome 100+ / Safari 15+)"
+  },
+  "apply": {
+    "copy_to": ".",
+    "post_install": [],
+    "open_in_browser": "index.html"
+  },
+  "_injectedAt": "2026-05-13T00:39:57.452Z",
+  "_injectedFrom": "ezer-ai"
+}

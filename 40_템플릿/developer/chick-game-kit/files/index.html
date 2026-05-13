@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>🐤 병아리 키우기 게임</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Comic Sans MS', 'Apple SD Gothic Neo', sans-serif;
+    background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 50%, #98D98E 50%, #6ABE6A 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+  #cloud1, #cloud2, #cloud3 {
+    position: absolute;
+    background: white;
+    border-radius: 50px;
+    opacity: 0.8;
+  }
+  #cloud1 { width: 100px; height: 30px; top: 50px; left: 10%; animation: drift 30s linear infinite; }
+  #cloud2 { width: 140px; height: 35px; top: 100px; left: 40%; animation: drift 45s linear infinite; }
+  #cloud3 { width: 80px; height: 25px; top: 70px; left: 70%; animation: drift 35s linear infinite; }
+  @keyframes drift {
+    from { transform: translateX(-200px); }
+    to { transform: translateX(100vw); }
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  h1 {
+    text-align: center;
+    color: #FF6B35;
+    text-shadow: 3px 3px 0 #FFE66D, 6px 6px 10px rgba(0,0,0,0.2);
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #5a3a1a;
+    margin-bottom: 20px;
+    font-size: 1em;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .stat {
+    text-align: center;
+    flex: 1;
+  }
+  .stat-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #333;
+  }
+  .bar {
+    width: 100%;
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .bar > div {
+    height: 100%;
+    transition: width 0.3s, background 0.3s;
+    border-radius: 5px;
+  }
+  .hunger-bar > div { background: linear-gradient(90deg, #FFB347, #FF6B35); }
+  .happy-bar > div { background: linear-gradient(90deg, #FFD93D, #FF6B9D); }
+  .energy-bar > div { background: linear-gradient(90deg, #6BCB77, #4D96FF); }
+
+  .stage {
+    background: rgba(255, 255, 255, 0.6);
+    border: 4px dashed #FFB347;
+    border-radius: 30px;
+    height: 320px;
+    position: relative;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .chick {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    animation: idle 2s ease-in-out infinite;
+  }
+  .chick:hover { transform: translateX(-50%) scale(1.05); }
+  .chick:active { transform: translateX(-50%) scale(0.95); }
+  @keyframes idle {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+  }
+  @keyframes happy {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(-10deg); }
+    75% { transform: translateX(-50%) rotate(10deg); }
+  }
+  .chick.happy { animation: happy 0.5s ease-in-out 2; }
+
+  .chick svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+
+  .grass {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(180deg, #6ABE6A, #4D9C4D);
+  }
+  .grass::before {
+    content: "";
+    position: absolute;
+    top: -8px; left: 0; right: 0; height: 12px;
+    background-image: radial-gradient(circle at 10px 10px, #6ABE6A 5px, transparent 6px),
+                      radial-gradient(circle at 30px 8px, #6ABE6A 5px, transparent 6px),
+                      radial-gradient(circle at 50px 10px, #6ABE6A 5px, transparent 6px);
+    background-size: 60px 12px;
+    background-repeat: repeat-x;
+  }
+
+  .floating {
+    position: absolute;
+    font-size: 2em;
+    pointer-events: none;
+    animation: floatUp 1.2s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(0.5); }
+    100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  button {
+    padding: 16px 8px;
+    border: none;
+    border-radius: 16px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    background: white;
+    box-shadow: 0 4px 0 #ccc, 0 6px 10px rgba(0,0,0,0.15);
+    transition: all 0.1s;
+    font-family: inherit;
+  }
+  button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #ccc, 0 8px 12px rgba(0,0,0,0.2); }
+  button:active { transform: translateY(2px); box-shadow: 0 2px 0 #ccc; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-feed { color: #FF6B35; }
+  .btn-play { color: #FF6B9D; }
+  .btn-sleep { color: #4D96FF; }
+  .btn-clean { color: #6BCB77; }
+
+  .message {
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 12px;
+    color: #5a3a1a;
+    min-height: 40px;
+    font-size: 0.95em;
+  }
+
+  .age-badge {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #FFE66D;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #5a3a1a;
+    z-index: 5;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.8em; }
+    .stat-value { font-size: 1.1em; }
+    .buttons { grid-template-columns: repeat(2, 1fr); }
+    .stage { height: 260px; }
+    .chick { width: 90px; height: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cloud1"></div>
+<div id="cloud2"></div>
+<div id="cloud3"></div>
+
+<div class="container">
+  <h1>🐤 병아리 키우기 🐤</h1>
+  <p class="subtitle">나만의 작은 병아리를 돌봐주세요!</p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">🍚 배고픔</div>
+      <div class="stat-value" id="hungerVal">100</div>
+      <div class="bar hunger-bar"><div id="hungerBar" style="width:100%"></div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">😊 행복</div>
+      <div class="stat-value" id="happyVal">100</div>
+      <div class="bar happy-bar"><div id="happyBar" style="width:100%"></div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">⚡ 에너지</div>
+      <div class="stat-value" id="energyVal">100</div>
+      <div class="bar energy-bar"><div id="energyBar" style="width:100%"></div></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="age-badge" id="ageBadge">🐣 아기 (0일)</div>
+    <div class="chick" id="chick" onclick="petChick()">
+      <svg viewBox="0 0 200 200" id="chickSvg">
+        <ellipse cx="100" cy="120" rx="65" ry="55" fill="#FFD93D"/>
+        <circle cx="100" cy="75" r="45" fill="#FFD93D"/>
+        <circle cx="85" cy="70" r="6" fill="white"/>
+        <circle cx="115" cy="70" r="6" fill="white"/>
+        <circle cx="85" cy="71" r="3" fill="#333"/>
+        <circle cx="115" cy="71" r="3" fill="#333"/>
+        <polygon points="95,85 105,85 100,95" fill="#FF8C42"/>
+        <ellipse cx="80" cy="55" rx="5" ry="8" fill="#FFD93D" transform="rotate(-20 80 55)"/>
+        <ellipse cx="120" cy="55" rx="5" ry="8" fill="#FFD93D" transform="rotate(20 120 55)"/>
+        <ellipse cx="55" cy="115" rx="12" ry="20" fill="#FFD93D"/>
+        <ellipse cx="145" cy="115" rx="12" ry="20" fill="#FFD93D"/>
+        <ellipse cx="85" cy="175" rx="12" ry="5" fill="#FF8C42"/>
+        <ellipse cx="115" cy="175" rx="12" ry="5" fill="#FF8C42"/>
+      </svg>
+    </div>
+    <div class="grass"></div>
+  </div>
+
+  <div class="buttons">
+    <button class="btn-feed" onclick="feed()">🌽<br>먹이주기</button>
+    <button class="btn-play" onclick="play()">🎾<br>놀아주기</button>
+    <button class="btn-sleep" onclick="sleep()">😴<br>재우기</button>
+    <button class="btn-clean" onclick="clean()">🛁<br>씻기기</button>
+  </div>
+
+  <div class="message" id="message">병아리를 클릭해서 쓰다듬어주세요! 🥰</div>
+</div>
+
+<script>
+  const state = {
+    hunger: 100,
+    happy: 100,
+    energy: 100,
+    clean: 100,
+    age: 0,
+    actions: 0,
+  };
+
+  const messages = {
+    feed: ['냠냠 맛있어요! 🌽', '배가 부르네요~', '더 주세요~ 짹짹!', '꿀꺽! 잘 먹었어요!'],
+    play: ['신나요! 🎉', '짹짹짹! 더 놀아요!', '재밌어요~', '꺄르르 ✨'],
+    sleep: ['쿨쿨... 💤', '잘 자요~', '꿈나라로 가요...', '코~ 코~'],
+    clean: ['깨끗해졌어요! ✨', '뽀송뽀송~', '향기로워요!', '기분 좋아요!'],
+    pet: ['뽀뽀! 💕', '좋아해요!', '짹짹 ❤️', '간지러워요~'],
+    hungry: ['배고파요... 😢', '먹이 좀 주세요!', '꼬르륵...'],
+    sad: ['심심해요... 😞', '같이 놀아요!', '외로워요...'],
+    tired: ['피곤해요... 😴', '졸려요...', '쉬고 싶어요'],
+    dirty: ['더러워요... 🥲', '씻고 싶어요'],
+  };
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function showMsg(text) { document.getElementById('message').textContent = text; }
+
+  function spawnFloat(emoji) {
+    const stage = document.querySelector('.stage');
+    const float = document.createElement('div');
+    float.className = 'floating';
+    float.textContent = emoji;
+    float.style.left = (40 + Math.random() * 20) + '%';
+    float.style.bottom = '120px';
+    stage.appendChild(float);
+    setTimeout(() => float.remove(), 1200);
+  }
+
+  function animateHappy() {
+    const chick = document.getElementById('chick');
+    chick.classList.add('happy');
+    setTimeout(() => chick.classList.remove('happy'), 1000);
+  }
+
+  function update() {
+    state.hunger = Math.max(0, Math.min(100, state.hunger));
+    state.happy = Math.max(0, Math.min(100, state.happy));
+    state.energy = Math.max(0, Math.min(100, state.energy));
+    document.getElementById('hungerVal').textContent = Math.round(state.hunger);
+    document.getElementById('happyVal').textContent = Math.round(state.happy);
+    document.getElementById('energyVal').textContent = Math.round(state.energy);
+    document.getElementById('hungerBar').style.width = state.hunger + '%';
+    document.getElementById('happyBar').style.width = state.happy + '%';
+    document.getElementById('energyBar').style.width = state.energy + '%';
+
+    let stage = '🐣 아기';
+    if (state.age >= 30) stage = '🐔 어른닭';
+    else if (state.age >= 15) stage = '🐥 청소년';
+    else if (state.age >= 5) stage = '🐤 어린이';
+    document.getElementById('ageBadge').textContent = `${stage} (${state.age}일)`;
+
+    if (state.age >= 15) {
+      document.querySelectorAll('#chickSvg ellipse[fill="#FFD93D"], #chickSvg circle[fill="#FFD93D"]')
+        .forEach(el => el.setAttribute('fill', '#F5C842'));
+    }
+  }
+
+  function feed() {
+    if (state.hunger >= 100) { showMsg('배가 너무 불러요! 😅'); return; }
+    state.hunger += 25;
+    state.happy += 5;
+    showMsg(pick(messages.feed));
+    spawnFloat('🌽');
+    animateHappy();
+    tickAction();
+  }
+
+  function play() {
+    if (state.energy < 15) { showMsg('너무 피곤해서 못 놀아요... 😴'); return; }
+    state.happy += 25;
+    state.energy -= 15;
+    state.hunger -= 5;
+    showMsg(pick(messages.play));
+    spawnFloat('❤️');
+    animateHappy();
+    tickAction();
+  }
+
+  function sleep() {
+    if (state.energy >= 100) { showMsg('지금은 안 졸려요! 😎'); return; }
+    state.energy += 35;
+    state.hunger -= 5;
+    showMsg(pick(messages.sleep));
+    spawnFloat('💤');
+    tickAction();
+  }
+
+  function clean() {
+    state.clean = 100;
+    state.happy += 15;
+    showMsg(pick(messages.clean));
+    spawnFloat('✨');
+    animateHappy();
+    tickAction();
+  }
+
+  function petChick() {
+    state.happy += 5;
+    showMsg(pick(messages.pet));
+    spawnFloat(pick(['💕', '❤️', '✨', '🌟']));
+    animateHappy();
+    update();
+  }
+
+  function tickAction() {
+    state.actions++;
+    if (state.actions % 3 === 0) state.age++;
+    update();
+  }
+
+  setInterval(() => {
+    state.hunger -= 3;
+    state.happy -= 2;
+    state.energy -= 1;
+    let warning = null;
+    if (state.hunger < 30) warning = pick(messages.hungry);
+    else if (state.happy < 30) warning = pick(messages.sad);
+    else if (state.energy < 20) warning = pick(messages.tired);
+    if (warning && Math.random() < 0.5) showMsg(warning);
+    update();
+  }, 5000);
+
+  update();
+</script>
+
+</body>
+</html>
