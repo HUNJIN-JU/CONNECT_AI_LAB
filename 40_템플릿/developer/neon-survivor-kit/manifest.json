@@ -1,0 +1,49 @@
+{
+  "name": "네온서바이버 샘플팩",
+  "version": "1.0.0",
+  "category": "game",
+  "description": "네온 비주얼 + Vampire Survivors 메카닉 + PayPal 인앱 결제 통합 미니 게임. 단일 HTML.",
+  "base": "vanilla HTML/Canvas/JS + PayPal SDK",
+  "components": [
+    "index.html"
+  ],
+  "keywords": [
+    "네온",
+    "neon",
+    "서바이버",
+    "survivor",
+    "survival",
+    "뱀파이어",
+    "vampire",
+    "액션",
+    "action",
+    "게임",
+    "game",
+    "미니게임",
+    "슈팅",
+    "shooting",
+    "paypal",
+    "페이팔",
+    "결제",
+    "인앱결제",
+    "인앱",
+    "수익화",
+    "monetize",
+    "캔버스",
+    "canvas"
+  ],
+  "dependencies": {
+    "production": [],
+    "dev": []
+  },
+  "tested_with": {
+    "browser": "modern (Chrome 100+ / Safari 15+)"
+  },
+  "apply": {
+    "copy_to": ".",
+    "post_install": [],
+    "open_in_browser": "index.html"
+  },
+  "_injectedAt": "2026-05-13T00:40:39.919Z",
+  "_injectedFrom": "ezer-ai"
+}
